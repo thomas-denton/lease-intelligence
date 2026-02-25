@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lease Intelligence — Know What You're Signing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:   #065A82;
+  --teal:   #1C7293;
+  --mint:   #02C39A;
+  --mint2:  #05A881;
+  --cream:  #F8F5F0;
+  --warm:   #EDE8E0;
+  --slate:  #334155;
+  --muted:  #64748B;
+  --light:  #EEF6FB;
+  --red:    #DC2626;
+  --orange: #EA580C;
+  --yellow: #CA8A04;
+  --green:  #16A34A;
+  --white:  #ffffff;
+  --shadow: 0 4px 24px rgba(6,90,130,0.12);
+  --shadow-lg: 0 12px 48px rgba(6,90,130,0.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--slate);
+  overflow-x: hidden;
+}
+
+/* ── TYPOGRAPHY ── */
+.serif { font-family: 'DM Serif Display', serif; }
+.mono  { font-family: 'DM Mono', monospace; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  background: rgba(248,245,240,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(6,90,130,0.08);
+  transition: all 0.3s;
+}
+.nav-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--navy); text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo .dot { width: 8px; height: 8px; background: var(--mint); border-radius: 50%; }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--navy); }
+.nav-cta {
+  background: var(--navy); color: white;
+  padding: 10px 24px; border-radius: 8px;
+  font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: all 0.2s;
+}
+.nav-cta:hover { background: var(--teal); transform: translateY(-1px); box-shadow: var(--shadow); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 48px 80px;
+  position: relative; overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(135deg, var(--cream) 0%, #E8F4FA 50%, var(--cream) 100%);
+}
+.hero-bg::before {
+  content: '';
+  position: absolute; top: -200px; right: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(2,195,154,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-bg::after {
+  content: '';
+  position: absolute; bottom: -100px; left: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(6,90,130,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.hero-inner {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(2,195,154,0.1); border: 1px solid rgba(2,195,154,0.3);
+  color: var(--mint2); font-size: 13px; font-weight: 600;
+  padding: 6px 14px; border-radius: 100px; margin-bottom: 24px;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-badge .pulse { width: 6px; height: 6px; background: var(--mint); border-radius: 50%;
+  animation: pulse 2s infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1.08;
+  color: var(--navy);
+  margin-bottom: 20px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero-title em { color: var(--mint2); font-style: normal; }
+
+.hero-sub {
+  font-size: 18px; line-height: 1.65; color: var(--muted);
+  max-width: 480px; margin-bottom: 36px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-stats {
+  display: flex; gap: 32px; margin-bottom: 40px;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.stat { }
+.stat-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--navy); }
+.stat-label { font-size: 13px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+
+.hero-actions {
+  display: flex; align-items: center; gap: 16px;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.btn-primary {
+  background: var(--navy); color: white;
+  padding: 14px 32px; border-radius: 10px;
+  font-size: 16px; font-weight: 600; text-decoration: none;
+  border: none; cursor: pointer;
+  transition: all 0.25s; display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 16px rgba(6,90,130,0.25);
+}
+.btn-primary:hover { background: var(--teal); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.btn-secondary {
+  color: var(--navy); font-size: 15px; font-weight: 600;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  transition: gap 0.2s;
+}
+.btn-secondary:hover { gap: 10px; }
+
+/* ── UPLOAD CARD ── */
+.upload-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(6,90,130,0.06);
+  animation: fadeUp 0.7s 0.2s ease both;
+  position: relative;
+}
+.upload-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--navy), var(--mint));
+  border-radius: 20px 20px 0 0;
+}
+
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--navy); margin-bottom: 6px;
+}
+.card-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+
+.upload-zone {
+  border: 2px dashed rgba(6,90,130,0.2);
+  border-radius: 12px;
+  padding: 36px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: var(--light);
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--mint);
+  background: rgba(2,195,154,0.05);
+}
+.upload-zone input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.upload-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+.upload-zone p { font-size: 15px; color: var(--slate); font-weight: 500; margin-bottom: 4px; }
+.upload-zone span { font-size: 13px; color: var(--muted); }
+
+.form-row { margin-top: 16px; }
+.form-row label { display: block; font-size: 13px; font-weight: 600; color: var(--slate); margin-bottom: 6px; }
+.form-row select, .form-row input {
+  width: 100%; padding: 10px 14px;
+  border: 1px solid rgba(6,90,130,0.15); border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--slate);
+  background: white; outline: none; transition: border-color 0.2s;
+  appearance: none;
+}
+.form-row select:focus, .form-row input:focus { border-color: var(--teal); }
+
+.analyze-btn {
+  width: 100%; margin-top: 20px;
+  background: var(--navy); color: white;
+  padding: 14px; border-radius: 10px;
+  font-size: 16px; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.analyze-btn:hover:not(:disabled) { background: var(--teal); transform: translateY(-1px); }
+.analyze-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+.price-note { text-align: center; margin-top: 12px; font-size: 13px; color: var(--muted); }
+.price-note b { color: var(--navy); }
+
+/* ── PROGRESS ── */
+.progress-bar-wrap {
+  height: 4px; background: var(--warm); border-radius: 2px;
+  margin-top: 16px; overflow: hidden; display: none;
+}
+.progress-bar {
+  height: 100%; width: 0; border-radius: 2px;
+  background: linear-gradient(90deg, var(--navy), var(--mint));
+  transition: width 0.3s ease;
+}
+.progress-label { font-size: 13px; color: var(--muted); margin-top: 8px; display: none; text-align: center; }
+
+/* ── RESULTS PANEL ── */
+#results-panel {
+  display: none;
+  max-width: 900px; margin: 0 auto;
+  animation: fadeUp 0.5s ease both;
+}
+
+.result-header {
+  text-align: center; padding: 48px 0 32px;
+}
+.result-title { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--navy); margin-bottom: 8px; }
+.result-sub { font-size: 16px; color: var(--muted); }
+
+.score-ring-wrap {
+  display: flex; justify-content: center; margin: 32px 0;
+}
+.score-ring {
+  position: relative; width: 180px; height: 180px;
+}
+.score-ring svg { transform: rotate(-90deg); }
+.score-ring .score-num {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: 'DM Serif Display', serif; font-size: 42px; color: var(--navy);
+  transform: rotate(0deg);
+}
+.score-ring .score-label { font-size: 12px; color: var(--muted); font-weight: 500; font-family: 'DM Sans', sans-serif; }
+
+.tier-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 20px; border-radius: 100px;
+  font-weight: 700; font-size: 15px; margin-bottom: 12px;
+}
+.tier-GREEN  { background: rgba(22,163,74,0.1);  color: #15803D; }
+.tier-YELLOW { background: rgba(202,138,4,0.1);  color: #B45309; }
+.tier-ORANGE { background: rgba(234,88,12,0.12); color: var(--orange); }
+.tier-RED    { background: rgba(220,38,38,0.1);  color: #B91C1C; }
+
+.subscores {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  margin: 24px 0;
+}
+.subscore {
+  background: white; border-radius: 12px; padding: 16px;
+  text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.subscore-val { font-family: 'DM Serif Display', serif; font-size: 28px; }
+.subscore-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+
+.section-block {
+  background: white; border-radius: 16px; padding: 28px;
+  margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.section-block h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 16px; }
+
+.fin-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--warm); border-radius: 10px; overflow: hidden;
+}
+.fin-cell {
+  background: white; padding: 14px 16px;
+}
+.fin-cell .label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.fin-cell .value { font-family: 'DM Mono', monospace; font-size: 18px; color: var(--navy); margin-top: 4px; font-weight: 500; }
+
+.flag-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 16px; border-radius: 10px; margin-bottom: 10px;
+  border: 1px solid transparent;
+}
+.flag-CRITICAL { background: rgba(220,38,38,0.04);  border-color: rgba(220,38,38,0.15); }
+.flag-HIGH     { background: rgba(234,88,12,0.04);  border-color: rgba(234,88,12,0.15); }
+.flag-MEDIUM   { background: rgba(202,138,4,0.04);  border-color: rgba(202,138,4,0.15); }
+.flag-LOW      { background: rgba(22,163,74,0.04);  border-color: rgba(22,163,74,0.15); }
+
+.flag-sev {
+  flex-shrink: 0; padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  font-family: 'DM Mono', monospace;
+}
+.sev-CRITICAL { background: var(--red);    color: white; }
+.sev-HIGH     { background: var(--orange); color: white; }
+.sev-MEDIUM   { background: var(--yellow); color: white; }
+.sev-LOW      { background: var(--green);  color: white; }
+
+.flag-content h4 { font-size: 14px; font-weight: 600; color: var(--slate); margin-bottom: 4px; }
+.flag-content p  { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.flag-citation {
+  margin-top: 6px; font-family: 'DM Mono', monospace; font-size: 12px;
+  color: var(--muted); background: var(--warm); padding: 6px 10px; border-radius: 6px;
+  border-left: 3px solid var(--teal);
+}
+.flag-action {
+  margin-top: 8px; font-size: 13px; color: var(--teal); font-weight: 500;
+}
+
+.summary-grid { display: flex; flex-direction: column; gap: 12px; }
+.summary-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 16px; background: var(--light); border-radius: 10px;
+}
+.summary-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.summary-text { font-size: 14px; line-height: 1.6; color: var(--slate); }
+.summary-text b { color: var(--navy); }
+
+.disclaimer {
+  font-size: 12px; color: var(--muted); text-align: center;
+  padding: 20px 0 8px; line-height: 1.6;
+  border-top: 1px solid var(--warm); margin-top: 20px;
+}
+
+.download-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: white; border: 2px solid var(--navy); color: var(--navy);
+  padding: 12px 28px; border-radius: 10px; font-size: 15px; font-weight: 600;
+  cursor: pointer; text-decoration: none; transition: all 0.2s;
+  margin-top: 8px;
+}
+.download-btn:hover { background: var(--navy); color: white; }
+
+/* ── HOW IT WORKS ── */
+.how-section { padding: 100px 48px; background: white; }
+.section-label { font-size: 13px; font-weight: 700; color: var(--mint2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+.section-title { font-family: 'DM Serif Display', serif; font-size: clamp(32px, 4vw, 48px); color: var(--navy); margin-bottom: 16px; }
+.section-sub { font-size: 17px; color: var(--muted); max-width: 540px; line-height: 1.65; margin-bottom: 56px; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1000px; margin: 0 auto; }
+.step { position: relative; }
+.step-num {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--light); color: var(--navy);
+  font-family: 'DM Serif Display', serif; font-size: 22px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.step-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.step-text { font-size: 15px; color: var(--muted); line-height: 1.65; }
+.step-connector {
+  position: absolute; top: 24px; right: -24px;
+  width: 24px; text-align: center; color: var(--warm); font-size: 20px;
+}
+
+/* ── WHAT WE CHECK ── */
+.checks-section { padding: 100px 48px; background: var(--cream); }
+.checks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
+.check-card {
+  background: white; border-radius: 14px; padding: 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.check-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.check-icon { font-size: 28px; margin-bottom: 12px; }
+.check-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.check-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ── PRICING ── */
+.pricing-section { padding: 100px 48px; background: white; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 960px; margin: 0 auto; }
+.pricing-card {
+  border-radius: 16px; padding: 32px;
+  border: 2px solid transparent;
+  transition: all 0.25s;
+}
+.pricing-card.standard { background: var(--light); border-color: var(--light); }
+.pricing-card.featured { background: var(--navy); border-color: var(--navy); transform: scale(1.04); }
+.pricing-card.landlord { background: var(--light); border-color: var(--light); }
+.pricing-card:hover:not(.featured) { border-color: var(--teal); }
+
+.price-tier { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.pricing-card.featured .price-tier { color: var(--mint); }
+.price-tier:not(.pricing-card.featured *) { color: var(--muted); }
+.price-amount { font-family: 'DM Serif Display', serif; font-size: 44px; color: var(--navy); margin-bottom: 4px; }
+.pricing-card.featured .price-amount { color: white; }
+.price-per { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+.pricing-card.featured .price-per { color: rgba(255,255,255,0.6); }
+.price-features { list-style: none; margin-bottom: 28px; }
+.price-features li { font-size: 14px; padding: 6px 0; display: flex; gap: 8px; align-items: flex-start; }
+.price-features li::before { content: "✓"; color: var(--mint2); font-weight: 700; flex-shrink: 0; }
+.pricing-card.featured .price-features li { color: rgba(255,255,255,0.85); }
+.pricing-card.featured .price-features li::before { color: var(--mint); }
+.price-btn {
+  display: block; text-align: center;
+  padding: 12px; border-radius: 10px; font-weight: 600; font-size: 15px;
+  text-decoration: none; transition: all 0.2s; cursor: pointer; border: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.pricing-card.standard .price-btn { background: var(--navy); color: white; }
+.pricing-card.standard .price-btn:hover { background: var(--teal); }
+.pricing-card.featured .price-btn { background: var(--mint); color: var(--navy); }
+.pricing-card.featured .price-btn:hover { background: var(--mint2); color: white; }
+.pricing-card.landlord .price-btn { background: var(--navy); color: white; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy); color: rgba(255,255,255,0.7);
+  padding: 48px; text-align: center;
+}
+footer .logo { font-family: 'DM Serif Display', serif; font-size: 22px; color: white; margin-bottom: 12px; }
+footer p { font-size: 14px; margin-bottom: 8px; }
+footer a { color: rgba(255,255,255,0.5); text-decoration: none; margin: 0 12px; font-size: 13px; }
+footer a:hover { color: var(--mint); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fadeUp { animation: fadeUp 0.6s ease both; }
+
+/* ── SPINNER ── */
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-stats { gap: 20px; }
+  .how-section, .checks-section, .pricing-section { padding: 72px 24px; }
+  .steps { grid-template-columns: 1fr; gap: 32px; }
+  .step-connector { display: none; }
+  .checks-grid { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .pricing-card.featured { transform: none; }
+  .subscores { grid-template-columns: repeat(2, 1fr); }
+  .fin-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo"><span class="dot"></span> Lease Intelligence</a>
+  <div class="nav-links">
+    <a href="#how">How It Works</a>
+    <a href="#checks">What We Check</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#analyze" class="nav-cta">Analyze My Lease →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge"><span class="pulse"></span> AI-Powered Lease Analysis</div>
+      <h1 class="hero-title">Know exactly what you're <em>signing</em>.</h1>
+      <p class="hero-sub">Upload your lease. In 60 seconds, get a risk score, clause-by-clause flags, and a plain-English summary of what to negotiate before you sign.</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">60s</div>
+          <div class="stat-label">Analysis time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Clauses checked</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">$0.65</div>
+          <div class="stat-label">Cost to run</div>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="#analyze" class="btn-primary">Analyze My Lease <span>→</span></a>
+        <a href="#how" class="btn-secondary">See how it works <span>↓</span></a>
+      </div>
+    </div>
+
+    <!-- UPLOAD CARD -->
+    <div id="analyze" class="upload-card">
+      <div class="card-title">Analyze Your Lease</div>
+      <div class="card-sub">PDF only · Max 20MB · Results in 60 seconds</div>
+
+      <div class="upload-zone" id="dropzone">
+        <input type="file" id="lease-file" accept=".pdf">
+        <span class="upload-icon">📄</span>
+        <p id="file-label">Drop your lease PDF here</p>
+        <span>or click to browse files</span>
+      </div>
+
+      <div class="form-row">
+        <label>Property State</label>
+        <select id="state-select">
+          <option value="VA">Virginia</option>
+          <option value="CA">California</option>
+          <option value="NY">New York</option>
+          <option value="TX">Texas</option>
+          <option value="FL">Florida</option>
+          <option value="WA">Washington</option>
+          <option value="IL">Illinois</option>
+          <option value="GA">Georgia</option>
+          <option value="CO">Colorado</option>
+          <option value="MA">Massachusetts</option>
+          <option value="NC">North Carolina</option>
+          <option value="AZ">Arizona</option>
+          <option value="NJ">New Jersey</option>
+          <option value="MD">Maryland</option>
+          <option value="DC">Washington DC</option>
+          <option value="OTHER">Other State</option>
+        </select>
+      </div>
+
+      <button class="analyze-btn" id="analyze-btn" disabled onclick="runAnalysis()">
+        <span class="spinner" id="spinner"></span>
+        <span id="btn-text">Select a lease file to analyze</span>
+      </button>
+
+      <div class="progress-bar-wrap" id="progress-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="progress-label" id="progress-label"></div>
+
+      <p class="price-note">Try the <b>live demo</b> — <a href="#" onclick="runDemo(); return false;" style="color:var(--teal);font-weight:600;">analyze a sample lease instantly</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS PANEL -->
+<section style="padding: 0 48px 80px; background: var(--cream);">
+  <div id="results-panel">
+    <div class="result-header">
+      <div class="result-title serif">Your Lease Analysis</div>
+      <div class="result-sub" id="result-filename">—</div>
+    </div>
+
+    <div style="text-align:center;">
+      <div id="tier-badge" class="tier-badge tier-ORANGE">● ORANGE — Negotiate Before Signing</div>
+      <div class="score-ring-wrap">
+        <div class="score-ring">
+          <svg width="180" height="180" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="70" fill="none" stroke="#EEF6FB" stroke-width="14"/>
+            <circle id="score-circle" cx="90" cy="90" r="70" fill="none"
+                    stroke="#EA580C" stroke-width="14" stroke-linecap="round"
+                    stroke-dasharray="439.8" stroke-dashoffset="439.8"
+                    style="transition: stroke-dashoffset 1.2s ease, stroke 0.5s ease;"/>
+          </svg>
+          <div class="score-num">
+            <span id="score-display">–</span>
+            <span class="score-label">/ 100</span>
+          </div>
+        </div>
+      </div>
+      <p id="score-rationale" style="max-width:600px; margin: 0 auto 24px; color: var(--muted); font-size:15px; line-height:1.65;"></p>
+    </div>
+
+    <div class="subscores" id="subscores"></div>
+
+    <div class="section-block">
+      <h3>Financial Summary</h3>
+      <div class="fin-grid" id="fin-grid"></div>
+    </div>
+
+    <div class="section-block">
+      <h3>Risk Flags</h3>
+      <div id="flags-container"></div>
+    </div>
+
+    <div class="section-block">
+      <h3>What This Means For You</h3>
+      <div class="summary-grid" id="summary-grid"></div>
+      <div class="disclaimer" id="disclaimer"></div>
+    </div>
+
+    <div style="text-align:center; padding: 16px 0 32px;">
+      <button class="download-btn" id="download-btn" onclick="downloadPDF()" style="display:none;">
+        ⬇ Download Full PDF Report
+      </button>
+      <br>
+      <a href="#analyze" style="display:inline-block; margin-top:20px; color:var(--muted); font-size:14px;">← Analyze another lease</a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div style="max-width:1000px; margin:0 auto; text-align:center;">
+    <div class="section-label">Process</div>
+    <h2 class="section-title">Three steps, 60 seconds</h2>
+    <p class="section-sub" style="margin:0 auto 56px;">No account required for your first analysis. Upload, analyze, understand.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Upload your lease</div>
+        <p class="step-text">Drop your PDF. We accept any residential lease — fixed-term, month-to-month, furnished, or sublet.</p>
+        <div class="step-connector">→</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">AI analyzes 50+ clauses</div>
+        <p class="step-text">Gemini extracts every field. Claude reasons through the risk. Both models validate each other's work.</p>
+        <div class="step-connector">→</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Get your report</div>
+        <p class="step-text">Risk score, clause flags with severity ratings, market benchmarks, and three plain-English bullets: biggest risk, best part, what to do.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE CHECK -->
+<section class="checks-section" id="checks">
+  <div style="max-width:1000px; margin:0 auto; text-align:center;">
+    <div class="section-label">Coverage</div>
+    <h2 class="section-title">What we check</h2>
+    <p class="section-sub" style="margin:0 auto 48px;">50+ variables across 4 analysis layers — from raw clause extraction to market benchmarking.</p>
+    <div class="checks-grid">
+      <div class="check-card">
+        <div class="check-icon">💰</div>
+        <div class="check-title">Financial Exposure</div>
+        <p class="check-text">Total upfront cost, full-term liability, deposit ratio, late fee percentage, and all hidden fees.</p>
+      </div>
+      <div class="check-card">
+        <div class="check-icon">📅</div>
+        <div class="check-title">Renewal Deadline</div>
+        <p class="check-text">Exact date you must notify your landlord to leave. Short windows (under 30 days) flagged immediately.</p>
+      </div>
+      <div class="check-card">
+        <div class="check-icon">🔑</div>
+        <div class="check-title">Landlord Access Rights</div>
+        <p class="check-text">Entry notice hours checked against state law. Violations flagged as HIGH severity automatically.</p>
+      </div>
+      <div class="check-card">
+        <div class="check-icon">📍</div>
+        <div class="check-title">Market Benchmarks</div>
+        <p class="check-text">Your rent compared to ZIP-level medians. Cost per square foot vs. neighborhood averages.</p>
+      </div>
+      <div class="check-card">
+        <div class="check-icon">⚖️</div>
+        <div class="check-title">State Law Compliance</div>
+        <p class="check-text">Clauses checked against state-specific statutes. Illegal provisions flagged as CRITICAL.</p>
+      </div>
+      <div class="check-card">
+        <div class="check-icon">🚪</div>
+        <div class="check-title">Early Termination</div>
+        <p class="check-text">Exit costs, notice requirements, and whether the termination clause is landlord-favorable or balanced.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div style="max-width:1000px; margin:0 auto; text-align:center;">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple pricing</h2>
+    <p class="section-sub" style="margin:0 auto 48px;">Pay per analysis. No subscription required for tenants. Landlord plans available for property managers.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card standard">
+        <div class="price-tier" style="color:var(--muted);">Free</div>
+        <div class="price-amount">$0</div>
+        <div class="price-per">first analysis</div>
+        <ul class="price-features">
+          <li>Risk score + tier</li>
+          <li>Top 3 risk flags</li>
+          <li>Financial summary</li>
+          <li>One-time use</li>
+        </ul>
+        <button class="price-btn" onclick="document.getElementById('analyze').scrollIntoView({behavior:'smooth'})">Try Free →</button>
+      </div>
+      <div class="pricing-card featured">
+        <div class="price-tier" style="color:var(--mint);">Most Popular</div>
+        <div class="price-amount" style="color:white;">$19</div>
+        <div class="price-per">per analysis</div>
+        <ul class="price-features">
+          <li>Full risk score breakdown</li>
+          <li>All clause flags with citations</li>
+          <li>Market benchmarks (ZIP-level)</li>
+          <li>Renewal deadline calendar alert</li>
+          <li>Downloadable PDF report</li>
+          <li>Negotiation talking points</li>
+        </ul>
+        <button class="price-btn">Get Full Analysis →</button>
+      </div>
+      <div class="pricing-card landlord">
+        <div class="price-tier" style="color:var(--muted);">Landlord</div>
+        <div class="price-amount">$49</div>
+        <div class="price-per">per month</div>
+        <ul class="price-features">
+          <li>10 lease analyses/month</li>
+          <li>Template compliance checker</li>
+          <li>State law deviation report</li>
+          <li>Bulk upload support</li>
+          <li>API access</li>
+        </ul>
+        <button class="price-btn">Contact Us →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Lease Intelligence</div>
+  <p>AI-powered residential lease analysis · Built with Gemini + Claude</p>
+  <p style="margin-top:16px;">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">Contact</a>
+  </p>
+  <p style="margin-top:20px; font-size:12px; opacity:0.5;">
+    For informational purposes only. Not legal advice. Consult a licensed attorney for your specific situation.
+  </p>
+</footer>
+
+<script>
+// ── FILE HANDLING ─────────────────────────────────────────────────────────────
+const fileInput = document.getElementById('lease-file');
+const dropzone  = document.getElementById('dropzone');
+const analyzeBtn = document.getElementById('analyze-btn');
+const btnText   = document.getElementById('btn-text');
+const spinner   = document.getElementById('spinner');
+let selectedFile = null;
+let pdfBase64 = null;
+
+fileInput.addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (f) setFile(f);
+});
+
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault(); dropzone.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f && f.name.endsWith('.pdf')) setFile(f);
+});
+
+function setFile(f) {
+  selectedFile = f;
+  document.getElementById('file-label').textContent = f.name;
+  analyzeBtn.disabled = false;
+  btnText.textContent = `Analyze "${f.name.substring(0, 30)}..."`;
+}
+
+// ── PROGRESS SIMULATION ───────────────────────────────────────────────────────
+function setProgress(pct, label) {
+  const bar = document.getElementById('progress-bar');
+  const wrap = document.getElementById('progress-wrap');
+  const lbl = document.getElementById('progress-label');
+  wrap.style.display = 'block'; lbl.style.display = 'block';
+  bar.style.width = pct + '%';
+  lbl.textContent = label;
+}
+
+// ── RUN ANALYSIS ──────────────────────────────────────────────────────────────
+async function runAnalysis() {
+  if (!selectedFile) return;
+
+  analyzeBtn.disabled = true;
+  btnText.textContent = 'Analyzing...';
+  spinner.style.display = 'block';
+  setProgress(10, 'Uploading lease...');
+
+  const formData = new FormData();
+  formData.append('file', selectedFile);
+  formData.append('state', document.getElementById('state-select').value);
+  formData.append('tier', 'paid');
+
+  try {
+    setProgress(30, 'Extracting clauses with Gemini...');
+    const progressInterval = setInterval(() => {
+      const bar = document.getElementById('progress-bar');
+      const current = parseInt(bar.style.width) || 30;
+      if (current < 75) bar.style.width = (current + 5) + '%';
+    }, 1500);
+
+    const res = await fetch('/analyze', { method: 'POST', body: formData });
+
+    clearInterval(progressInterval);
+    setProgress(90, 'Generating risk report...');
+
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+    const data = await res.json();
+
+    setProgress(100, 'Done!');
+    setTimeout(() => {
+      document.getElementById('progress-wrap').style.display = 'none';
+      document.getElementById('progress-label').style.display = 'none';
+    }, 600);
+
+    renderResults(data, selectedFile.name);
+
+  } catch (err) {
+    console.error(err);
+    btnText.textContent = 'Error — please try again';
+    analyzeBtn.disabled = false;
+    spinner.style.display = 'none';
+    setProgress(0, 'Error: ' + err.message);
+  }
+}
+
+// ── DEMO MODE ─────────────────────────────────────────────────────────────────
+async function runDemo() {
+  analyzeBtn.disabled = true;
+  btnText.textContent = 'Loading demo...';
+  spinner.style.display = 'block';
+  setProgress(20, 'Loading sample lease...');
+
+  try {
+    const progressInterval = setInterval(() => {
+      const bar = document.getElementById('progress-bar');
+      const current = parseInt(bar.style.width) || 20;
+      if (current < 85) bar.style.width = (current + 8) + '%';
+    }, 400);
+
+    const res = await fetch('/demo');
+    clearInterval(progressInterval);
+    setProgress(100, 'Done!');
+
+    const data = await res.json();
+    setTimeout(() => {
+      document.getElementById('progress-wrap').style.display = 'none';
+      document.getElementById('progress-label').style.display = 'none';
+    }, 400);
+
+    renderResults(data, 'sample_lease.pdf (demo)');
+  } catch (err) {
+    setProgress(0, 'Demo failed — is the server running?');
+  }
+
+  analyzeBtn.disabled = false;
+  btnText.textContent = 'Select a lease file to analyze';
+  spinner.style.display = 'none';
+}
+
+// ── RENDER RESULTS ────────────────────────────────────────────────────────────
+function renderResults(data, filename) {
+  const panel = document.getElementById('results-panel');
+  panel.style.display = 'block';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  document.getElementById('result-filename').textContent = filename;
+
+  const l4 = data.layer4 || {};
+  const score = l4.overall_lease_risk_score || 0;
+  const tier  = l4.risk_tier || 'YELLOW';
+  const flags = data.layer3_flags || [];
+  const l1 = data.layer1 || {};
+  const l2 = data.layer2 || {};
+
+  // Tier badge
+  const tierLabels = {
+    GREEN: '● GREEN — Favorable Terms',
+    YELLOW: '● YELLOW — Review Recommended',
+    ORANGE: '● ORANGE — Negotiate Before Signing',
+    RED: '● RED — Serious Concerns'
+  };
+  const tb = document.getElementById('tier-badge');
+  tb.textContent = tierLabels[tier] || tier;
+  tb.className = `tier-badge tier-${tier}`;
+
+  // Score ring
+  const scoreColors = { GREEN: '#16A34A', YELLOW: '#CA8A04', ORANGE: '#EA580C', RED: '#DC2626' };
+  const circle = document.getElementById('score-circle');
+  const circumference = 439.8;
+  const offset = circumference - (score / 100) * circumference;
+  circle.style.strokeDashoffset = offset;
+  circle.style.stroke = scoreColors[tier] || '#EA580C';
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('score-rationale').textContent = l4.score_rationale || '';
+
+  // Subscores
+  const subItems = [
+    { label: 'Renewal Risk',  val: l4.renewal_risk_score },
+    { label: 'Financial',     val: l4.financial_burden_score },
+    { label: 'Access Risk',   val: l4.landlord_access_risk_score },
+    { label: 'Termination',   val: l4.termination_risk_score },
+  ];
+  const subScoreColor = v => v >= 75 ? '#DC2626' : v >= 50 ? '#EA580C' : v >= 25 ? '#CA8A04' : '#16A34A';
+  document.getElementById('subscores').innerHTML = subItems.map(s =>
+    `<div class="subscore">
+      <div class="subscore-val" style="color:${subScoreColor(s.val)}">${s.val ?? '—'}</div>
+      <div class="subscore-label">${s.label}</div>
+    </div>`
+  ).join('');
+
+  // Financial grid
+  const fmt = v => v ? `$${v}` : '—';
+  const fmtf = v => v ? `${parseFloat(v).toFixed(1)}x rent` : '—';
+  const fmtp = v => v ? `${(parseFloat(v)*100).toFixed(1)}%` : '—';
+  const finItems = [
+    { label: 'Monthly Rent',        value: fmt(l1.monthly_rent) },
+    { label: 'All-In Monthly',      value: fmt(l2.effective_monthly_cost) },
+    { label: 'Total Upfront',       value: fmt(l2.total_upfront_cost) },
+    { label: 'Full-Term Exposure',  value: fmt(l2.total_liability_term) },
+    { label: 'Deposit Ratio',       value: fmtf(l2.deposit_as_months_rent) },
+    { label: 'Late Fee',            value: fmtp(l2.late_fee_as_pct_rent) },
+    { label: 'Renewal Deadline',    value: l2.renewal_deadline_date || '—' },
+    { label: 'Days to Decide',      value: l2.days_until_renewal_deadline ?? '—' },
+  ];
+  document.getElementById('fin-grid').innerHTML = finItems.map(f =>
+    `<div class="fin-cell">
+      <div class="label">${f.label}</div>
+      <div class="value">${f.value}</div>
+    </div>`
+  ).join('');
+
+  // Flags
+  document.getElementById('flags-container').innerHTML = flags.length === 0
+    ? '<p style="color:var(--muted);font-size:14px;">No significant issues found.</p>'
+    : flags.map(f => `
+      <div class="flag-item flag-${f.severity}">
+        <div><span class="flag-sev sev-${f.severity}">${f.severity}</span></div>
+        <div class="flag-content">
+          <h4>${f.short_description}</h4>
+          <p>${f.detailed_explanation}</p>
+          ${f.raw_clause_citation ? `<div class="flag-citation">"${f.raw_clause_citation}"</div>` : ''}
+          <div class="flag-action">→ ${f.recommended_action}</div>
+        </div>
+      </div>`).join('');
+
+  // Summary
+  document.getElementById('summary-grid').innerHTML = `
+    <div class="summary-item">
+      <div class="summary-icon">🚨</div>
+      <div class="summary-text"><b>Biggest Risk:</b> ${l4.tenant_summary_biggest_risk || '—'}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-icon">✅</div>
+      <div class="summary-text"><b>Best Part:</b> ${l4.tenant_summary_biggest_positive || '—'}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-icon">➡️</div>
+      <div class="summary-text"><b>Your Action:</b> ${l4.tenant_summary_key_action || '—'}</div>
+    </div>`;
+
+  document.getElementById('disclaimer').textContent = l4.tenant_disclaimer || data.layer4?.tenant_disclaimer || 'This analysis is for informational purposes only and does not constitute legal advice.';
+
+  // Store PDF data
+  if (data.pdf_base64) {
+    pdfBase64 = data.pdf_base64;
+    document.getElementById('download-btn').style.display = 'inline-flex';
+  }
+
+  // Reset button
+  btnText.textContent = 'Analyze another lease';
+  spinner.style.display = 'none';
+  analyzeBtn.disabled = false;
+}
+
+function downloadPDF() {
+  if (!pdfBase64) return;
+  const link = document.createElement('a');
+  link.href = 'data:application/pdf;base64,' + pdfBase64;
+  link.download = 'lease-analysis.pdf';
+  link.click();
+}
+</script>
+</body>
+</html>
